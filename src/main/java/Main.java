@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class Main extends ListenerAdapter {
 
-
+    // FIXME: 20/02/2021 Need to figure this out
     private static String puphoChannelId = "809524120412225586";
 
 
@@ -43,6 +43,7 @@ public class Main extends ListenerAdapter {
         //We construct a builder for a BOT account. If we wanted to use a CLIENT account
         // we would use AccountType.CLIENT
         try {
+            // FIXME: 20/02/2021 Added this to CONFIG VAR
             JDA jda = JDABuilder.createDefault("ODA5NDg1NzM5MDYyNTkxNTEw.YCVyVw.JeOdbC2b0olwbuVxWvVywZhpdXQ") // The token of the account that is logging in.
                     .addEventListeners(new Main())   // An instance of a class that will handle events.
                     .build();
@@ -121,6 +122,11 @@ public class Main extends ListenerAdapter {
             System.out.printf("(%s)[%s]<%s>: %s\n", guild.getName(), textChannel.getName(), name, msg);
         } else if (event.isFromType(ChannelType.PRIVATE)) //If this message was sent to a PrivateChannel
         {
+
+            if (msg.equals("!hi")) {
+                // TODO: 20/02/2021 Added Embedded message for tutorial
+                event.getChannel().sendMessage("Yo baby").queue();
+            }
             //The message was sent in a PrivateChannel.
             //In this example we don't directly use the privateChannel, however, be sure, there are uses for it!
             PrivateChannel privateChannel = event.getPrivateChannel();
