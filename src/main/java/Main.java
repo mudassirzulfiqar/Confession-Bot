@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
@@ -122,10 +123,24 @@ public class Main extends ListenerAdapter {
             System.out.printf("(%s)[%s]<%s>: %s\n", guild.getName(), textChannel.getName(), name, msg);
         } else if (event.isFromType(ChannelType.PRIVATE)) //If this message was sent to a PrivateChannel
         {
+/*
+            embed = discord.Embed(
+                    title=f"Confession Code {code.upper()}",
+                    description=confession,
+                    timestamp=dt.utcnow(),
+                    colour=random.randint(1, 0xffffff),
+                    )
+            user_ban_code = get_code(16)
+            self.confession_users[user_ban_code] = original_message.author
+            embed.set_footer(text=f"x.banuser {user_ban_code}")*/
 
             if (msg.equals("!hi")) {
                 // TODO: 20/02/2021 Added Embedded message for tutorial
-                event.getChannel().sendMessage("Yo baby").queue();
+//                event.getChannel().sendMessage("Yo baby").queue();
+                event.getChannel().sendMessage(new EmbedBuilder()
+                        .setTitle("Hello! Its confession bot")
+                        .setDescription("Send any message to me starting with <\b>!c<\b> will be send to the configured server \n For example \"!c Hello its my first confession\"")
+                        .build()).queue();
             }
             //The message was sent in a PrivateChannel.
             //In this example we don't directly use the privateChannel, however, be sure, there are uses for it!
