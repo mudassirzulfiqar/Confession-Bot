@@ -90,14 +90,14 @@ public class Main extends ListenerAdapter {
     }
 
     private static Connection getConnection() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+        URI dbUri = new URI(System.getenv("DATABASE_URL1"));
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         System.out.println(username);
         System.out.println(password);
-        return DriverManager.getConnection(dbUrl, "cmrfxvksvyjxlm", "461739d91119e21223a1141296cdefa40b39285b1951089656135e72ecfff9da");
+        return DriverManager.getConnection(dbUrl, username, password);
     }
 
     private static void fetchChannels(JDAImpl jda) {
