@@ -98,7 +98,7 @@ public class Main extends ListenerAdapter {
         System.out.println(username);
         System.out.println(password);
         System.out.println(dbUrl);
-        return DriverManager.getConnection(dbUrl, username, password);
+        return DriverManager.getConnection(dbUrl + "?sslmode=require", username, password);
     }
 
     private static void fetchChannels(JDAImpl jda) {
