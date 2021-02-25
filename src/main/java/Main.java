@@ -97,6 +97,7 @@ public class Main extends ListenerAdapter {
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         System.out.println(username);
         System.out.println(password);
+        System.out.println(dbUrl);
         return DriverManager.getConnection(dbUrl, username, password);
     }
 
