@@ -95,6 +95,8 @@ public class Main extends ListenerAdapter {
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+        System.out.println(username);
+        System.out.println(password);
 
         return DriverManager.getConnection(dbUrl, username, password);
     }
