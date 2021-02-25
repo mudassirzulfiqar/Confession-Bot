@@ -97,8 +97,9 @@ public class Main extends ListenerAdapter {
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         System.out.println(username);
         System.out.println(password);
-        System.out.println(dbUrl);
-        return DriverManager.getConnection(dbUrl + "?sslmode=require", username, password);
+        String s = dbUrl + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+        System.out.println(s);
+        return DriverManager.getConnection(s, username, password);
     }
 
     private static void fetchChannels(JDAImpl jda) {
