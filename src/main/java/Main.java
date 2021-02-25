@@ -68,15 +68,6 @@ public class Main extends ListenerAdapter {
             e.printStackTrace();
         }
 
-        try {
-            DatabaseHelper.getInstance().test();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-
         DatabaseHelper.getInstance().createStorage();
 
 
@@ -163,7 +154,29 @@ public class Main extends ListenerAdapter {
                 //The message was sent in a PrivateChannel.
                 //In this example we don't directly use the privateChannel, however, be sure, there are uses for it!
                 PrivateChannel privateChannel = event.getPrivateChannel();
-//                System.out.printf("[PRIV]<%s>: %s\n", author.getName(), msg);
+                if (CHANNEL_ID.isEmpty()) {
+                    try {
+                        if (DatabaseHelper.getInstance().queryChannelId() != null) {
+                            CHANNEL_ID = DatabaseHelper.getInstance().queryChannelId();
+                        } else {
+                            CHANNEL_ID = "";
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                /**
+                 * If still Channel Id is empty then we will send the message
+                 */
+                if (CHANNEL_ID.isEmpty()) {
+                    event.getChannel().sendMessage(
+                            new EmbedBuilder()
+                                    .setTitle("Error!!!")
+                                    .setDescription("I cannot find the configured channel for Bot. Come back later")
+                                    .setColor(Color.RED).build()).queue();
+
+                }
+
 
                 // TODO: 20/02/2021 if no channel found then
                 // TODO: 20/02/2021 need to link admin for fall back message

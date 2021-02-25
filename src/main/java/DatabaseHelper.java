@@ -46,7 +46,7 @@ public class DatabaseHelper {
         }
     }
 
-    private void queryChannelId() {
+    public String queryChannelId() {
         try {
             Connection connection = null;
             connection = getConnection();
@@ -54,7 +54,9 @@ public class DatabaseHelper {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
             while (rs.next()) {
-                System.out.println("queryChannelId:" + rs.getString("channel_id"));
+                String channel_id = rs.getString("channel_id");
+                System.out.println("queryChannelId:" + channel_id);
+                return channel_id;
             }
 
         } catch (URISyntaxException e) {
@@ -63,6 +65,7 @@ public class DatabaseHelper {
             throwables.printStackTrace();
         }
 
+        return null;
     }
 
     public void saveChannelId(String channelId) {
