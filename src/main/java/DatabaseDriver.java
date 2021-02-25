@@ -23,9 +23,12 @@ public class DatabaseDriver {
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-
-        return DriverManager.getConnection(dbUrl, username, password);
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+        System.out.println(username);
+        System.out.println(password);
+        String s = dbUrl + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+        System.out.println(s);
+        return DriverManager.getConnection(s, username, password);
     }
 
 }

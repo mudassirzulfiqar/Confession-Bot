@@ -68,38 +68,15 @@ public class Main extends ListenerAdapter {
             e.printStackTrace();
         }
 
-
         try {
-            Connection connection = null;
-            connection = getConnection();
-
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
-            stmt.executeUpdate("CREATE TABLE ticks (tick timestamp)");
-            stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-            ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-            while (rs.next()) {
-                System.out.println("Read from DB: " + rs.getTimestamp("tick"));
-            }
-
+            DatabaseHelper.getInstance().test();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-    }
 
-    private static Connection getConnection() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(System.getenv("DATABASE_URL1"));
 
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-        System.out.println(username);
-        System.out.println(password);
-        String s = dbUrl + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
-        System.out.println(s);
-        return DriverManager.getConnection(s, username, password);
     }
 
     private static void fetchChannels(JDAImpl jda) {
