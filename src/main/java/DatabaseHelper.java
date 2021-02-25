@@ -23,7 +23,7 @@ public class DatabaseHelper {
         stmt.executeUpdate("INSERT INTO BOT VALUES (234234)");
         ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
         while (rs.next()) {
-            System.out.println("Read from DB: " + rs.getTimestamp("channel_id"));
+            System.out.println("Read from DB: " + rs.getString("channel_id"));
         }
     }
 
