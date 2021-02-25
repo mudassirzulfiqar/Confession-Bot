@@ -25,9 +25,14 @@ import net.dv8tion.jda.internal.JDAImpl;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.*;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main extends ListenerAdapter {
 
@@ -62,6 +67,36 @@ public class Main extends ListenerAdapter {
             // you use awaitReady in a thread that has the possibility of being interrupted (async thread usage and interrupts)
             e.printStackTrace();
         }
+
+
+        try {
+            Connection connection = null;
+            connection = getConnection();
+
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
+            stmt.executeUpdate("CREATE TABLE ticks (tick timestamp)");
+            stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+            ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+            while (rs.next()) {
+                System.out.println("Read from DB: " + rs.getTimestamp("tick"));
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private static Connection getConnection() throws URISyntaxException, SQLException {
+        URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+
+        return DriverManager.getConnection(dbUrl, username, password);
     }
 
     private static void fetchChannels(JDAImpl jda) {
