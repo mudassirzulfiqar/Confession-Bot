@@ -97,9 +97,7 @@ public class Main extends ListenerAdapter {
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
         System.out.println(username);
         System.out.println(password);
-
-        String dbUl = "jdbc:postgresql://ec2-3-223-72-172.compute-1.amazonaws.com:5432/d3ovf4i1btf1u4?ssl=true&user=cmrfxvksvyjxlm&password=461739d91119e21223a1141296cdefa40b39285b1951089656135e72ecfff9da";
-        return DriverManager.getConnection(dbUl, "cmrfxvksvyjxlm", "461739d91119e21223a1141296cdefa40b39285b1951089656135e72ecfff9da");
+        return DriverManager.getConnection(dbUrl, "cmrfxvksvyjxlm", "461739d91119e21223a1141296cdefa40b39285b1951089656135e72ecfff9da");
     }
 
     private static void fetchChannels(JDAImpl jda) {
