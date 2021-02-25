@@ -19,7 +19,7 @@ public class DatabaseHelper {
 
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("DROP TABLE IF EXISTS BOT");
-        stmt.executeUpdate("CREATE TABLE BOT (channel_id text)");
+        stmt.executeUpdate("CREATE TABLE BOT (channel_id VARCHAR)");
         stmt.executeUpdate("INSERT INTO channel_id VALUES (234234)");
         ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
         while (rs.next()) {
