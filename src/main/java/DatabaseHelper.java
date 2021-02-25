@@ -28,7 +28,7 @@ public class DatabaseHelper {
     }
 
 
-    private void createStorage() {
+    public void createStorage() {
         try {
             Connection connection = null;
             connection = getConnection();
@@ -65,13 +65,13 @@ public class DatabaseHelper {
 
     }
 
-    private void saveChannelId(String channelId) {
+    public void saveChannelId(String channelId) {
         try {
             Connection connection = null;
             connection = getConnection();
 
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("INSERT INTO BOT VALUES (234234)");
+            stmt.executeUpdate("INSERT INTO BOT VALUES (" + channelId + ")");
             ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
             while (rs.next()) {
                 System.out.println("saveChannelId" + rs.getString("channel_id"));

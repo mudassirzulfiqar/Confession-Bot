@@ -38,7 +38,7 @@ public class Main extends ListenerAdapter {
 
     public static final String NAME_OF_BOT = "Pupho";
     // FIXME: 20/02/2021 Need to figure this out
-    private static String CHANNEL_ID = "812665872803037204";
+    private static String CHANNEL_ID = "";
     private long ADMIN_ID = 0;
 
 
@@ -77,28 +77,11 @@ public class Main extends ListenerAdapter {
         }
 
 
-    }
-
-    private static void fetchChannels(JDAImpl jda) {
+        DatabaseHelper.getInstance().createStorage();
 
 
     }
 
-    /**
-     * NOTE THE @Override!
-     * This method is actually overriding a method in the ListenerAdapter class! We place an @Override annotation
-     * right before any method that is overriding another to guarantee to ourselves that it is actually overriding
-     * a method from a super class properly. You should do this every time you override a method!
-     * <p>
-     * As stated above, this method is overriding a hook method in the
-     * {@link net.dv8tion.jda.api.hooks.ListenerAdapter ListenerAdapter} class. It has convenience methods for all JDA events!
-     * Consider looking through the events it offers if you plan to use the ListenerAdapter.
-     * <p>
-     * In this example, when a message is received it is printed to the console.
-     *
-     * @param event An event containing information about a {@link net.dv8tion.jda.api.entities.Message Message} that was
-     *              sent in a channel.
-     */
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         //These are provided with every event in JDA
@@ -142,21 +125,30 @@ public class Main extends ListenerAdapter {
                             .queue();
                 } else if (msg.startsWith("!setup")) {
                     if (event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
-                        event.getGuild()
+                        event
+                                .getGuild()
                                 .createTextChannel(NAME_OF_BOT)
                                 .setTopic("Confessional channel created. PM your confession Bot")
                                 .queue(this::sendSetupMessage);
 
                     }
                 } else if (msg.equals("!link channel")) {
-//                    String channelId = msg.replaceAll("[^0-9]", ""); // returns 123
-//                    System.out.println("Channel" + channelId);
                     CHANNEL_ID = event.getChannel().getId();
-                    event.getJDA().getTextChannelById(CHANNEL_ID).sendMessage("Channel Linked").queue();
-                } else if (msg.equals("!link admin")) {
+                    DatabaseHelper.getInstance().saveChannelId(CHANNEL_ID);
+                    event.getJDA()
+                            .getTextChannelById(CHANNEL_ID)
+                            .sendMessage(new EmbedBuilder()
+                                    .setTitle(NAME_OF_BOT)
+                                    .setDescription("This Channel has been linked for Confession \nNote: Only one channel can be configured for Confessions\nUse `!link channel` in any channel to configure it. ")
+                                    .build())
+                            .queue();
+                } else {
+
+                }
+                /*else if (msg.equals("!link admin")) {
                     List<User> mentionedUsers = message.getMentionedUsers();
                     ADMIN_ID = mentionedUsers.get(0).getIdLong();
-                }
+                }*/
             }
 
 
@@ -184,7 +176,7 @@ public class Main extends ListenerAdapter {
                 } else {
                     event.getJDA().getTextChannelById(CHANNEL_ID)
                             .sendMessage(new EmbedBuilder()
-                                    .setTitle("Confession")
+                                    .setTitle(NAME_OF_BOT)
                                     .setDescription(msg.replace("!c", ""))
                                     .build()).queue();
                 }
@@ -196,9 +188,10 @@ public class Main extends ListenerAdapter {
 
     private void sendSetupMessage(TextChannel confessChannel) {
         CHANNEL_ID = confessChannel.getId();
+        DatabaseHelper.getInstance().saveChannelId(CHANNEL_ID);
         confessChannel.sendMessage(new EmbedBuilder()
-                .setTitle("Setup completed")
-                .setDescription("The Code for the channel is " + CHANNEL_ID)
+                .setTitle(NAME_OF_BOT)
+                .setDescription("This Channel has been linked for Confession \nNote: Only one channel can be configured for Confessions\nUse `!link channel` in any channel to configure it for incoming Confession.")
                 .setColor(Color.blue)
                 .build()).queue(message -> {
             confessChannel.sendMessage(new EmbedBuilder()
