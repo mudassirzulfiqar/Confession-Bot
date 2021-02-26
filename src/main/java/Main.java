@@ -21,22 +21,18 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.internal.JDAImpl;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.*;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main extends ListenerAdapter {
 
     public static final String NAME_OF_BOT = "Pupho";
+    public static final String CHANNEL_LINK_MSG = "This Channel has been linked for Confessions \nNote: Only one channel can be configured at a time.\nUse `!link channel` in any channel to configure it. ";
+    public static final String DISCORD_TOKEN = "ODE0NTg2NTA0ODM5NTYxMjM3.YDgAzQ.i4mA__hH3P-3bf5puS2Q_NY-qys";
+    public static final String SETUP_SUCCESS_MSG = "Confessional channel created. PM your confession Bot";
     // FIXME: 20/02/2021 Need to figure this out
     private static String CHANNEL_ID = "";
     private long ADMIN_ID = 0;
@@ -50,7 +46,7 @@ public class Main extends ListenerAdapter {
         // we would use AccountType.CLIENT
         try {
             // FIXME: 20/02/2021 Added this to CONFIG VAR
-            JDA jda = JDABuilder.createDefault("ODE0NTg2NTA0ODM5NTYxMjM3.YDgAzQ.i4mA__hH3P-3bf5puS2Q_NY-qys") // The token of the account that is logging in.
+            JDA jda = JDABuilder.createDefault(DISCORD_TOKEN) // The token of the account that is logging in.
                     .addEventListeners(new Main())   // An instance of a class that will handle events.
                     .build();
             jda.awaitReady(); // Blocking guarantees that JDA will be completely loaded.
@@ -119,7 +115,7 @@ public class Main extends ListenerAdapter {
                         event
                                 .getGuild()
                                 .createTextChannel(NAME_OF_BOT)
-                                .setTopic("Confessional channel created. PM your confession Bot")
+                                .setTopic(SETUP_SUCCESS_MSG)
                                 .queue(this::sendSetupMessage);
 
                     }
@@ -130,7 +126,7 @@ public class Main extends ListenerAdapter {
                             .getTextChannelById(CHANNEL_ID)
                             .sendMessage(new EmbedBuilder()
                                     .setTitle(NAME_OF_BOT)
-                                    .setDescription("This Channel has been linked for Confession \nNote: Only one channel can be configured for Confessions\nUse `!link channel` in any channel to configure it. ")
+                                    .setDescription(CHANNEL_LINK_MSG)
                                     .build())
                             .queue();
                 } else {
@@ -204,13 +200,13 @@ public class Main extends ListenerAdapter {
         DatabaseHelper.getInstance().saveChannelId(CHANNEL_ID);
         confessChannel.sendMessage(new EmbedBuilder()
                 .setTitle(NAME_OF_BOT)
-                .setDescription("This Channel has been linked for Confession \nNote: Only one channel can be configured for Confessions\nUse `!link channel` in any channel to configure it for incoming Confession.")
+                .setDescription(CHANNEL_LINK_MSG)
                 .setColor(Color.blue)
                 .build()).queue(message -> {
             confessChannel.sendMessage(new EmbedBuilder()
                     .setTitle("How does it work?")
                     .setDescription("If you see me online just write a personal message to me starting with `!c` \n Example:\n `!c <Write your first confession>` \n DM command :`!hi`")
-                    .setFooter("Developed by **moodi**")
+                    .setFooter("Developed by *IQ-500*")
                     .build()).queue();
         });
     }
