@@ -2,24 +2,24 @@
 
 Confession Bot Lets Anyone Send An Anonymous Message To Bot Configured Channel.
 
-click here To Add:
-https://discord.com/api/oauth2/authorize?client_id=814586504839561237&permissions=8&scope=bot
+click [here](https://discord.com/api/oauth2/authorize?client_id=814586504839561237&permissions=8&scope=bot "here") to add this to your server
+
 
 ------------
 
 ##### Bot Commands
 
-`!ping`: to ping the online status of the Bot
-`!roll` : display 1 to 6 in result
-`!setup` : Write this command in any channel in order to setup this bot for the first time.
-`!link channel` Use this command in any channel in order to link that channel for incoming Bots.
+- `!ping`: to ping the online status of the Bot
+- `!roll` : display 1 to 6 in result
+- `!setup` : Write this command in any channel in order to setup this bot for the first time.
+- `!link channel` Use this command in any channel in order to link that channel for incoming Bots.
 
 ------------
 
 ##### Personal Message Commands
 
-`!c` Send DM to the bot with this prefix and your message will be send to the server anonymously.
-`!hi` In order to interact with your Bot in personal DM for the first time.
+- `!c` Send DM to the bot with this prefix and your message will be send to the server anonymously.
+- `!hi` In order to interact with your Bot in personal DM for the first time.
 
 
 ------------
