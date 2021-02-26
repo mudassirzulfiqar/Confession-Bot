@@ -31,7 +31,7 @@ public class Main extends ListenerAdapter {
 
     public static final String NAME_OF_BOT = "Pupho";
     public static final String CHANNEL_LINK_MSG = "This Channel has been linked for Confessions \nNote: Only one channel can be configured at a time.\nUse `!link channel` in any channel to configure it. ";
-    public static final String DISCORD_TOKEN = "ODA5NDg1NzM5MDYyNTkxNTEw.YCVyVw.YGBKGFGqtbC0vA9o4C4yzX3cBqE";
+    public static final String DISCORD_TOKEN = "ODE0NTg2NTA0ODM5NTYxMjM3.YDgAzQ.kb7Wobkqwwt7ZXiKaGBoe2hwhuI";
     public static final String SETUP_SUCCESS_MSG = "Confessional channel created. PM your confession Bot";
     // FIXME: 20/02/2021 Need to figure this out
     private static String CHANNEL_ID = "";
