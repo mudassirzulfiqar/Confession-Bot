@@ -50,7 +50,7 @@ public class Main extends ListenerAdapter {
         // we would use AccountType.CLIENT
         try {
             // FIXME: 20/02/2021 Added this to CONFIG VAR
-            JDA jda = JDABuilder.createDefault("ODA5NDg1NzM5MDYyNTkxNTEw.YCVyVw.JeOdbC2b0olwbuVxWvVywZhpdXQ") // The token of the account that is logging in.
+            JDA jda = JDABuilder.createDefault("ODE0NTg2NTA0ODM5NTYxMjM3.YDgAzQ.i4mA__hH3P-3bf5puS2Q_NY-qys") // The token of the account that is logging in.
                     .addEventListeners(new Main())   // An instance of a class that will handle events.
                     .build();
             jda.awaitReady(); // Blocking guarantees that JDA will be completely loaded.
