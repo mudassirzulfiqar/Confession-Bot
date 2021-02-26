@@ -170,7 +170,7 @@ public class Main extends ListenerAdapter {
                                     .setTitle("Error!!!")
                                     .setDescription("I cannot find the configured channel for Bot. Come back later")
                                     .setColor(Color.RED).build()).queue();
-
+                    return;
                 }
 
 
