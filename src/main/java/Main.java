@@ -64,9 +64,6 @@ public class Main extends ListenerAdapter {
             e.printStackTrace();
         }
 
-        DatabaseHelper.getInstance().createStorage();
-
-
     }
 
     @Override
