@@ -118,7 +118,8 @@ public class Main extends ListenerAdapter {
                     }
                 } else if (msg.equals("!link channel")) {
                     CHANNEL_ID = event.getChannel().getId();
-                    DatabaseHelper.getInstance().saveChannelId(CHANNEL_ID);
+                    String serverId = event.getGuild().getId();
+                    DatabaseHelper.getInstance().saveChannelId(serverId, CHANNEL_ID);
                     event.getJDA()
                             .getTextChannelById(CHANNEL_ID)
                             .sendMessage(new EmbedBuilder()
@@ -195,7 +196,8 @@ public class Main extends ListenerAdapter {
     private void sendSetupMessage(TextChannel confessChannel) {
         CHANNEL_ID = confessChannel.getId();
         confessChannel.getGuild().getId();
-        DatabaseHelper.getInstance().saveChannelId(CHANNEL_ID);
+        String serverId = confessChannel.getGuild().getId();
+        DatabaseHelper.getInstance().saveChannelId(serverId, CHANNEL_ID);
         confessChannel.sendMessage(new EmbedBuilder()
                 .setTitle(NAME_OF_BOT)
                 .setDescription(CHANNEL_LINK_MSG)
