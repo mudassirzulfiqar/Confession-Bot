@@ -194,6 +194,7 @@ public class Main extends ListenerAdapter {
 
     private void sendSetupMessage(TextChannel confessChannel) {
         CHANNEL_ID = confessChannel.getId();
+        confessChannel.getGuild().getId();
         DatabaseHelper.getInstance().saveChannelId(CHANNEL_ID);
         confessChannel.sendMessage(new EmbedBuilder()
                 .setTitle(NAME_OF_BOT)
