@@ -29,9 +29,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Main extends ListenerAdapter {
 
-    public static final String NAME_OF_BOT = "Pupho";
+    public static final String NAME_OF_BOT = "CONFESSION";
+    public static final String CHANNEL_CONFESSION_NAME = "CONFESSION";
     public static final String CHANNEL_LINK_MSG = "This Channel has been linked for Confessions \nNote: Only one channel can be configured at a time.\nUse `!link channel` in any channel to configure it. ";
-    public static final String DISCORD_TOKEN = "ODE0NTg2NTA0ODM5NTYxMjM3.YDgAzQ.kb7Wobkqwwt7ZXiKaGBoe2hwhuI";
     public static final String SETUP_SUCCESS_MSG = "Confessional channel created. PM your confession Bot";
     // FIXME: 20/02/2021 Need to figure this out
     private static String CHANNEL_ID = "";
@@ -45,12 +45,12 @@ public class Main extends ListenerAdapter {
         //We construct a builder for a BOT account. If we wanted to use a CLIENT account
         // we would use AccountType.CLIENT
         try {
+
             // FIXME: 20/02/2021 Added this to CONFIG VAR
-            JDA jda = JDABuilder.createDefault(DISCORD_TOKEN) // The token of the account that is logging in.
+            JDA jda = JDABuilder.createDefault(System.getenv("DISCORD_BOT_TOKEN")) // The token of the account that is logging in.
                     .addEventListeners(new Main())   // An instance of a class that will handle events.
                     .build();
             jda.awaitReady(); // Blocking guarantees that JDA will be completely loaded.
-            System.out.println("Finished Building JDA!");
 
 
         } catch (LoginException e) {
@@ -111,7 +111,7 @@ public class Main extends ListenerAdapter {
                     if (event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
                         event
                                 .getGuild()
-                                .createTextChannel(NAME_OF_BOT)
+                                .createTextChannel(CHANNEL_CONFESSION_NAME)
                                 .setTopic(SETUP_SUCCESS_MSG)
                                 .queue(this::sendSetupMessage);
 
