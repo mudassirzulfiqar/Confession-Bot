@@ -150,8 +150,8 @@ public class Main extends ListenerAdapter {
                 PrivateChannel privateChannel = event.getPrivateChannel();
                 if (CHANNEL_ID.isEmpty()) {
                     try {
-                        if (DatabaseHelper.getInstance().queryChannelId() != null) {
-                            CHANNEL_ID = DatabaseHelper.getInstance().queryChannelId();
+                        if (DatabaseHelper.getInstance().queryChannelId(event.getGuild().getId()) != null) {
+                            CHANNEL_ID = DatabaseHelper.getInstance().queryChannelId(event.getGuild().getId());
                         } else {
                             CHANNEL_ID = "";
                         }

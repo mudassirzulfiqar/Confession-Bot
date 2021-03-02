@@ -46,13 +46,13 @@ public class DatabaseHelper {
         }
     }
 
-    public String queryChannelId() {
+    public String queryChannelId(String serverId) {
         try {
             Connection connection = null;
             connection = getConnection();
 
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
+            ResultSet rs = stmt.executeQuery("select * from bot where server_id = '" + serverId + "'");
             while (rs.next()) {
                 String channel_id = rs.getString("channel_id");
                 System.out.println("queryChannelId:" + channel_id);
