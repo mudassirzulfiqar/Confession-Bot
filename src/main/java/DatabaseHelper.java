@@ -19,8 +19,8 @@ public class DatabaseHelper {
 
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("DROP TABLE IF EXISTS BOT");
-        stmt.executeUpdate("CREATE TABLE BOT (channel_id VARCHAR)");
-        stmt.executeUpdate("INSERT INTO BOT VALUES (234234)");
+        stmt.executeUpdate("CREATE TABLE BOT (server_id text , channel_id text )");
+        stmt.executeUpdate("INSERT INTO BOT(server_id , channel_id) VALUES (" + 123 + "," + 123 + ")");
         ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
         while (rs.next()) {
             System.out.println("Read from DB: " + rs.getString("channel_id"));
@@ -74,8 +74,6 @@ public class DatabaseHelper {
             connection = getConnection();
 
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("DROP TABLE IF EXISTS BOT");
-            stmt.executeUpdate("CREATE TABLE BOT (server_id text , channel_id text )");
             stmt.executeUpdate("INSERT INTO BOT(server_id , channel_id) VALUES (" + serverId + "," + channelId + ")");
             ResultSet rs = stmt.executeQuery("SELECT channel_id FROM BOT");
             while (rs.next()) {

@@ -2,7 +2,7 @@
 
 Confession Bot Lets Anyone Send An Anonymous Message To Bot Configured Channel.
 
-click [here](https://discord.com/api/oauth2/authorize?client_id=814586504839561237&permissions=8&scope=bot "here") to add this to your server
+click [here](https://discord.com/oauth2/authorize?client_id=818581909050884116&permissions=8&scope=bot "here") to add this to your server
 
 
 ------------

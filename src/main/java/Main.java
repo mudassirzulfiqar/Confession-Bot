@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import model.CMessage;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import util.MessageUtil;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
@@ -29,12 +31,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Main extends ListenerAdapter {
 
-    public static final String NAME_OF_BOT = "CONFESSION";
-    public static final String CHANNEL_CONFESSION_NAME = "CONFESSION";
-    public static final String CHANNEL_LINK_MSG = "This Channel has been linked for Confessions \nNote: Only one channel can be configured at a time.\nUse `!link channel` in any channel to configure it. ";
-    public static final String SETUP_SUCCESS_MSG = "Confessional channel created. PM your confession Bot";
-    // FIXME: 20/02/2021 Need to figure this out
-    private static String CHANNEL_ID = "";
     private long ADMIN_ID = 0;
 
 
@@ -47,7 +43,7 @@ public class Main extends ListenerAdapter {
         try {
 
             // FIXME: 20/02/2021 Added this to CONFIG VAR
-            JDA jda = JDABuilder.createDefault(System.getenv("DISCORD_BOT_TOKEN")) // The token of the account that is logging in.
+            JDA jda = JDABuilder.createDefault(System.getenv("DISCORD_TOKEN")) // The token of the account that is logging in.
                     .addEventListeners(new Main())   // An instance of a class that will handle events.
                     .build();
             jda.awaitReady(); // Blocking guarantees that JDA will be completely loaded.
@@ -109,15 +105,14 @@ public class Main extends ListenerAdapter {
                             .queue();
                 } else if (msg.startsWith("!setup")) {
                     if (event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
-                        event
-                                .getGuild()
-                                .createTextChannel(CHANNEL_CONFESSION_NAME)
-                                .setTopic(SETUP_SUCCESS_MSG)
-                                .queue(this::sendSetupMessage);
+                        event.getGuild()
+                                .createTextChannel(SuccessMessage.CHANNEL_CONFESSION_NAME)
+                                .setTopic(SuccessMessage.SETUP_SUCCESS_MSG)
+                                .queue(this::createConfessChannel);
 
                     }
-                } else if (msg.equals("!link channel")) {
-                    CHANNEL_ID = event.getChannel().getId();
+                }/* else if (msg.equals("!link channel")) {
+                    String CHANNEL_ID = event.getChannel().getId();
                     String serverId = event.getGuild().getId();
                     DatabaseHelper.getInstance().saveChannelId(serverId, CHANNEL_ID);
                     event.getJDA()
@@ -127,7 +122,7 @@ public class Main extends ListenerAdapter {
                                     .setDescription(CHANNEL_LINK_MSG)
                                     .build())
                             .queue();
-                } else {
+                }*/ else {
 
                 }
                 /*else if (msg.equals("!link admin")) {
@@ -139,76 +134,59 @@ public class Main extends ListenerAdapter {
 
         } else if (event.isFromType(ChannelType.PRIVATE)) {
             if (msg.equals("!hi")) {
-                event.getChannel().sendMessage(new EmbedBuilder()
-                        .setTitle("Hello! Its confession bot")
-                        .setDescription("Send any message to me starting with `!c` will be send to the configured server \n For example:\n `!c <Write your first confession>`")
-                        .setColor(Color.blue)
-                        .build()).queue();
+                SuccessMessage.respondWakeCommand(event.getChannel()).queue();
             } else if (msg.startsWith("!c")) {
                 //The message was sent in a PrivateChannel.
                 //In this example we don't directly use the privateChannel, however, be sure, there are uses for it!
                 PrivateChannel privateChannel = event.getPrivateChannel();
-                if (CHANNEL_ID.isEmpty()) {
-                    try {
-                        if (DatabaseHelper.getInstance().queryChannelId(event.getGuild().getId()) != null) {
-                            CHANNEL_ID = DatabaseHelper.getInstance().queryChannelId(event.getGuild().getId());
-                        } else {
-                            CHANNEL_ID = "";
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                /**
-                 * If still Channel Id is empty then we will send the message
-                 */
-                if (CHANNEL_ID.isEmpty()) {
-                    event.getChannel().sendMessage(
-                            new EmbedBuilder()
-                                    .setTitle("Error!!!")
-                                    .setDescription("I cannot find the configured channel for Bot. Come back later")
-                                    .setColor(Color.RED).build()).queue();
+                // Extract the channelId from the Message
+
+                MessageUtil messageUtil = new MessageUtil();
+                CMessage cMessage = messageUtil.parseMessage(msg);
+
+                if (cMessage.getErrorMsg() != null) {
+                    ErrorMessage.wrongPatternError(event.getChannel(), cMessage.getErrorMsg()).queue();
                     return;
                 }
 
+                /*
+                 * If still Channel Id is empty then we will send the message
+                 */
+                boolean channelExist = false;
+                if (channelExist) {
+                    ErrorMessage.channelNotExist(event.getChannel());
+                    return;
+                }
+
+                String CHANNEL_ID = cMessage.getChannelId();
 
                 // TODO: 20/02/2021 if no channel found then
                 // TODO: 20/02/2021 need to link admin for fall back message
                 if (event.getJDA().getTextChannelById(CHANNEL_ID) == null) {
-                    event.getChannel().sendMessage(
-                            new EmbedBuilder()
-                                    .setTitle("Error!!!")
-                                    .setDescription("I cannot find the configured channel for Bot. Come back later")
-                                    .setColor(Color.RED).build()).queue();
-                } else {
-                    event.getJDA().getTextChannelById(CHANNEL_ID)
-                            .sendMessage(new EmbedBuilder()
-                                    .setTitle(NAME_OF_BOT)
-                                    .setDescription(msg.replace("!c", ""))
-                                    .build()).queue();
+                    ErrorMessage.channelNotExist(event.getChannel());
+                    return;
                 }
+
+                event.getJDA().getTextChannelById(CHANNEL_ID)
+                        .sendMessage(new EmbedBuilder()
+                                .setTitle(SuccessMessage.NAME_OF_BOT)
+                                .setDescription(cMessage.getMessage())
+                                .build()).queue();
+
             }
 
         }
 
     }
 
-    private void sendSetupMessage(TextChannel confessChannel) {
-        CHANNEL_ID = confessChannel.getId();
-        confessChannel.getGuild().getId();
+
+    private void createConfessChannel(TextChannel confessChannel) {
+        String CHANNEL_ID = confessChannel.getId();
         String serverId = confessChannel.getGuild().getId();
-        DatabaseHelper.getInstance().saveChannelId(serverId, CHANNEL_ID);
-        confessChannel.sendMessage(new EmbedBuilder()
-                .setTitle(NAME_OF_BOT)
-                .setDescription(CHANNEL_LINK_MSG)
-                .setColor(Color.blue)
-                .build()).queue(message -> {
-            confessChannel.sendMessage(new EmbedBuilder()
-                    .setTitle("How does it work?")
-                    .setDescription("If you see me online just write a personal message to me starting with `!c` \n Example:\n `!c <Write your first confession>` \n DM command :`!hi`")
-                    .setFooter("Developed by *IQ-500*")
-                    .build()).queue();
-        });
+
+//        DatabaseHelper.getInstance().saveChannelId(serverId, CHANNEL_ID);
+
+        SuccessMessage.channelCreateMessage(confessChannel).queue();
     }
 }
 
