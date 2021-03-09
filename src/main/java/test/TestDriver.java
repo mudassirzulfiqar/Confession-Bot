@@ -6,7 +6,7 @@ import util.MessageUtil;
 public class TestDriver {
 
     public static void main(String[] args) {
-        String test1 = "!c :123213213213 hello!";
+        String test1 = "!c : 123213213213 : hello!";
         test(test1);
 
         String test2 = "!c";

@@ -25,25 +25,20 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import util.MessageUtil;
 
 import javax.security.auth.login.LoginException;
-import java.awt.*;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Main extends ListenerAdapter {
 
-    private long ADMIN_ID = 0;
-
-
-    /**
-     * This is the method where the program starts.
-     */
     public static void main(String[] args) {
         //We construct a builder for a BOT account. If we wanted to use a CLIENT account
         // we would use AccountType.CLIENT
         try {
 
             // FIXME: 20/02/2021 Added this to CONFIG VAR
-            JDA jda = JDABuilder.createDefault(System.getenv("DISCORD_TOKEN")) // The token of the account that is logging in.
+            JDA jda = JDABuilder.createDefault("ODE4NTgxOTA5MDUwODg0MTE2.YEaJzw.2ANbi_3-fs6OkI6cRJK0PrTEVYQ") // The token of the account that is logging in.
                     .addEventListeners(new Main())   // An instance of a class that will handle events.
                     .build();
             jda.awaitReady(); // Blocking guarantees that JDA will be completely loaded.
@@ -137,24 +132,12 @@ public class Main extends ListenerAdapter {
                 SuccessMessage.respondWakeCommand(event.getChannel()).queue();
             } else if (msg.startsWith("!c")) {
                 //The message was sent in a PrivateChannel.
-                //In this example we don't directly use the privateChannel, however, be sure, there are uses for it!
-                PrivateChannel privateChannel = event.getPrivateChannel();
-                // Extract the channelId from the Message
 
                 MessageUtil messageUtil = new MessageUtil();
                 CMessage cMessage = messageUtil.parseMessage(msg);
 
                 if (cMessage.getErrorMsg() != null) {
                     ErrorMessage.wrongPatternError(event.getChannel(), cMessage.getErrorMsg()).queue();
-                    return;
-                }
-
-                /*
-                 * If still Channel Id is empty then we will send the message
-                 */
-                boolean channelExist = false;
-                if (channelExist) {
-                    ErrorMessage.channelNotExist(event.getChannel());
                     return;
                 }
 
@@ -173,6 +156,8 @@ public class Main extends ListenerAdapter {
                                 .setDescription(cMessage.getMessage())
                                 .build()).queue();
 
+            } else if (msg.equals("!list servers")) {
+                System.out.println(event.getJDA().getGuilds().toString());
             }
 
         }

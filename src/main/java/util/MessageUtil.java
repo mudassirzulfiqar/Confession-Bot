@@ -24,17 +24,16 @@ public class MessageUtil {
             String afterColon = split[1];
 
             try {
-                channelId = afterColon.split(" ")[0];
+                channelId = afterColon.trim();
             } catch (Exception e) {
                 return new CMessage(null, null, NO_CHANNEL);
             }
 
             try {
-                message = afterColon.split(" ")[1];
+                message = split[2];
             } catch (Exception e) {
                 return new CMessage(null, null, NO_MESSAGE);
             }
-
             return new CMessage(message, channelId, null);
         } catch (Exception e) {
             return new CMessage(null, null, WRONG_PATTERN);
