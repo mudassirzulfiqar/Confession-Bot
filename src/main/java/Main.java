@@ -26,9 +26,11 @@ import util.MessageUtil;
 
 import javax.security.auth.login.LoginException;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Main extends ListenerAdapter {
 
@@ -156,8 +158,61 @@ public class Main extends ListenerAdapter {
                                 .setDescription(cMessage.getMessage())
                                 .build()).queue();
 
-            } else if (msg.equals("!list servers")) {
+            } else if (msg.startsWith("!list servers")) {
+                if (msg.replace("!list servers", "").isEmpty()) {
+                    // its mean that we need to display the list of the guilds this bot is configured
+                    String listOfServers = event.getJDA().getGuilds().stream()
+                            .map(guild -> guild.getId() + " " + guild.getName()).collect(Collectors.joining("\n"));
+
+                    SuccessMessage.listOfServers(event.getChannel(), listOfServers).queue();
+
+                } else {
+                    // extract the menue
+                }
                 System.out.println(event.getJDA().getGuilds().toString());
+            } else if (msg.startsWith(Commands.DM.REACT_MESSAGE_RAW)) {
+                if (msg.replace(Commands.DM.REACT_MESSAGE_RAW, "").isEmpty()) {
+                    ErrorMessage.wrongPatternErrorReact(event.getChannel()).queue();
+                } else {
+                    String messageId = msg.split(" ")[2].trim();
+                    for (Guild guild : event.getJDA()
+                            .getGuilds()) {
+                        for (GuildChannel guildChannel : guild.getChannels()) {
+                            if (guildChannel != null) {
+                                TextChannel textChannelById = guildChannel.getGuild().getTextChannelById(guildChannel.getId());
+                                if (textChannelById != null) {
+                                    System.out.println(textChannelById.getName());
+                                    textChannelById.retrieveMessageById(messageId).queue((success) -> {
+                                                System.out.println("YYAY " + success.toString());
+                                                success.addReaction(msg.split(" ")[3]).queue(new Consumer<Void>() {
+                                                    @Override
+                                                    public void accept(Void unused) {
+                                                        String latestMessageId = event.getChannel().getLatestMessageId();
+                                                        event.getChannel().retrieveMessageById(latestMessageId).queue(new Consumer<Message>() {
+                                                            @Override
+                                                            public void accept(Message message) {
+                                                                message.addReaction(msg.split(" ")[3]).queue();
+                                                            }
+                                                        });
+                                                        // TODO: 11/03/2021 add reaction to message for success
+                                                    }
+                                                });
+                                            },
+                                            (exception) ->
+                                                    System.out.println("Cannot found"));
+                                }
+                            }
+                        }
+                    }
+
+
+//                    String lastMessageid = event.getJDA().getTextChannelById("818813037905313792").getLatestMessageId();
+//                    event.getJDA().getGuilds().get(0).getH
+//                    event.getJDA().getTextChannelById("818813037905313792").retrieveMessageById(lastMessageid)
+//                            .queue(message1 -> message1.addReaction("\uD83D\uDE02").queue());
+
+                    // extract the menue
+                }
             }
 
         }

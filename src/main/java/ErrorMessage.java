@@ -20,4 +20,8 @@ public class ErrorMessage {
                         .setDescription(error)
                         .setColor(Color.RED).build());
     }
+
+    public static MessageAction wrongPatternErrorReact(MessageChannel channel) {
+        return showError(channel, "Wrong Command", "Please insert the message id to react" + "\n" + Commands.DM.REACT_MESSAGE);
+    }
 }

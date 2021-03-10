@@ -31,4 +31,13 @@ public class SuccessMessage {
                 .setColor(Color.blue)
                 .build());
     }
+
+    public static MessageAction listOfServers(MessageChannel channel, String listOfServers) {
+        return channel.sendMessage(new EmbedBuilder()
+                .setTitle("List of Servers")
+                .setDescription(listOfServers)
+                .setColor(Color.blue)
+                .build());
+
+    }
 }
