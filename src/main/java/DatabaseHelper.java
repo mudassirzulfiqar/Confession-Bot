@@ -45,6 +45,28 @@ public class DatabaseHelper {
             throwables.printStackTrace();
         }
     }
+    public String queryChannelId() {
+        try {
+            Connection connection = null;
+            connection = getConnection();
+
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from bot");
+            while (rs.next()) {
+                String channel_id = rs.getString("channel_id");
+                System.out.println("linked channel: " + channel_id);
+                return channel_id;
+            }
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     public String queryChannelId(String serverId) {
         try {

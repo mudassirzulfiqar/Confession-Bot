@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import util.MessageUtil;
 
+import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -152,8 +153,16 @@ public class Main extends ListenerAdapter {
                     return;
                 }
 
+                String imgUrl = "";
+                if (!event.getMessage().getAttachments().isEmpty()) {
+                    for (Message.Attachment attachment : event.getMessage().getAttachments()) {
+                        imgUrl = attachment.getUrl();
+                    }
+                }
+
                 event.getJDA().getTextChannelById(CHANNEL_ID)
                         .sendMessage(new EmbedBuilder()
+                                .setThumbnail(imgUrl)
                                 .setTitle(SuccessMessage.NAME_OF_BOT)
                                 .setDescription(cMessage.getMessage())
                                 .build()).queue();
@@ -213,10 +222,59 @@ public class Main extends ListenerAdapter {
 
                     // extract the menue
                 }
+            } else if (msg.startsWith("!r")) {
+                TextChannel textChannelById = getConfessionChannel(event);
+                if (textChannelById == null) return;
+                String latestMessageId = textChannelById.getLatestMessageId();
+                event.getChannel().retrieveMessageById(latestMessageId).queue(new Consumer<Message>() {
+                    @Override
+                    public void accept(Message message) {
+                        SuccessMessage.sendReactionToLastConfession(message, msg).queue();
+                    }
+                });
+                // TODO: 11/03/2021 add reaction to message for success
+
             }
+
 
         }
 
+    }
+
+    String CHANNEL_ID = "";
+
+    @Nullable
+    private TextChannel getConfessionChannel(MessageReceivedEvent event) {
+        /*
+         * We are using this below technique to save our database transaction cost.
+         */
+//                if (CHANNEL_ID.isEmpty()) {
+        try {
+            String queryChannelId = DatabaseHelper.getInstance().queryChannelId();
+            String channelId = queryChannelId;
+            if (queryChannelId != null) {
+                CHANNEL_ID = channelId;
+            } else {
+                CHANNEL_ID = "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//                }
+        /*
+         * If still Channel Id is empty then we will send the message
+         */
+        if (CHANNEL_ID.isEmpty()) {
+            ErrorMessage.channelNotExist(event.getChannel()).queue();
+            return null;
+        }
+
+        TextChannel textChannelById = event.getJDA().getTextChannelById(CHANNEL_ID);
+        if (textChannelById == null) {
+            ErrorMessage.channelNotExist(event.getChannel()).queue();
+            return null;
+        }
+        return textChannelById;
     }
 
 

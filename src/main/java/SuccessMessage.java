@@ -1,5 +1,7 @@
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.awt.*;
@@ -40,4 +42,16 @@ public class SuccessMessage {
                 .build());
 
     }
+
+    public static RestAction<Void> sendReactionToLastConfession(Message message, String msg) {
+
+        String reaction = msg.replace("!r", "");
+        if (reaction.isEmpty()) {
+            return null;
+        }
+
+        return message.addReaction(reaction);
+
+    }
+
 }
