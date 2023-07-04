@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 public class Main extends ListenerAdapter {
 
+/*
     public static void main(String[] args) {
         //We construct a builder for a BOT account. If we wanted to use a CLIENT account
         // we would use AccountType.CLIENT
@@ -59,6 +60,7 @@ public class Main extends ListenerAdapter {
         }
 
     }
+*/
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
